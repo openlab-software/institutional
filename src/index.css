@@ -1,0 +1,66 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
+
+@theme {
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --color-brand-deep-green: #0F6E56;
+  --color-brand-mint-green: #5DCAA5;
+  --color-brand-night-forest: #0D1F1A;
+  --color-brand-mist-green: #E1F5EE;
+  --color-brand-medium-green: #4A7A6A;
+  --color-brand-black: #111111;
+  --color-brand-light-gray: #F0F0F0;
+
+  --color-background: var(--color-brand-night-forest);
+  --color-foreground: var(--color-brand-light-gray);
+
+  --color-card: var(--color-brand-black);
+  --color-card-foreground: var(--color-brand-light-gray);
+
+  --color-popover: var(--color-brand-black);
+  --color-popover-foreground: var(--color-brand-light-gray);
+
+  --color-primary: var(--color-brand-mint-green);
+  --color-primary-foreground: var(--color-brand-night-forest);
+
+  --color-secondary: var(--color-brand-deep-green);
+  --color-secondary-foreground: var(--color-brand-light-gray);
+
+  --color-muted: var(--color-brand-medium-green);
+  --color-muted-foreground: var(--color-brand-mist-green);
+
+  --color-accent: var(--color-brand-mint-green);
+  --color-accent-foreground: var(--color-brand-night-forest);
+
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #f8fafc;
+
+  --color-border: var(--color-brand-deep-green);
+  --color-input: var(--color-brand-deep-green);
+  --color-ring: var(--color-brand-mint-green);
+
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-mono antialiased;
+  }
+}
+
+/* Brand Specific Utilities */
+.text-micro {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.glass-panel {
+  @apply bg-brand-deep-green/10 backdrop-blur-md border border-brand-mint-green/20;
+}
