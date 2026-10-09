@@ -2,7 +2,6 @@ node_modules
 dist
 .git
 .github
-.devops/k8s
 .env*
 !.env.example
 *.log

@@ -1,8 +1,8 @@
 name: Build and Publish
 
 # CI builds/pushes the image and publishes the Helm chart (OCI).
-# The image tag in .devops/k8s is updated by the ArgoCD Image Updater, not by CI.
-# Deploying is ArgoCD's job: it watches .devops/k8s and syncs the cluster.
+# The release version is the chart version: ArgoCD follows the chart published to GHCR.
+# Deploying is ArgoCD's job: it syncs the cluster from that chart.
 
 on:
   # Release pipeline: creating a tag like v1.2.3 builds and publishes the image
