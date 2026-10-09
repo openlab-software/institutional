@@ -12,7 +12,7 @@ import {
   Mail,
   Linkedin
 } from "lucide-react";
-import { Logo } from "@/src/components/Logo";
+import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
