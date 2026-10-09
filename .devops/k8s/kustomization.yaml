@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# ArgoCD (ApplicationSet do repositório infrastructure) renderiza este diretório com kustomize.
+# A tag da imagem é reescrita pela CI a cada release (kustomize edit set image).
+resources:
+- deployment.yaml
+- ingress.yaml
+images:
+- name: ghcr.io/openlab-software/institutional
+  newName: ghcr.io/openlab-software/institutional
+  newTag: v0.1.0
