@@ -1,0 +1,10 @@
+apiVersion: v2
+name: institutional
+description: Site institucional da OpenLab (SPA estático servido por nginx)
+type: application
+# version/appVersion são sobrescritos pela CI no `helm package` (a partir da tag vX.Y.Z)
+version: 0.0.0
+appVersion: "v0.0.0"
+annotations:
+  # Liga o pacote do GHCR ao repositório (herda permissões e aparece na aba Packages)
+  org.opencontainers.image.source: https://github.com/openlab-software/institutional

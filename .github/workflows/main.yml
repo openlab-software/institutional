@@ -1,6 +1,7 @@
-name: Build, Publish and Bump manifests
+name: Build and Publish
 
-# CI builds/pushes the image and bumps its tag in .devops/k8s/kustomization.yaml.
+# CI builds/pushes the image and publishes the Helm chart (OCI).
+# The image tag in .devops/k8s is updated by the ArgoCD Image Updater, not by CI.
 # Deploying is ArgoCD's job: it watches .devops/k8s and syncs the cluster.
 
 on:
@@ -14,6 +15,8 @@ on:
 
 env:
   IMAGE: ghcr.io/openlab-software/institutional
+  # Helm chart OCI: publicado como ghcr.io/openlab-software/charts/institutional
+  CHART_REPO: ghcr.io/openlab-software/charts
   # Git tag on release pushes; commit sha on PR builds (never pushed).
   IMAGE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || github.sha }}
 
@@ -46,33 +49,30 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  bump-manifests:
-    needs: image
-    if: github.event_name == 'push'
+  chart:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-    # Serialize bumps so concurrent pushes don't race on the manifests commit.
-    concurrency:
-      group: bump-manifests
-      cancel-in-progress: false
+      contents: read
+      packages: write
     steps:
-      # A tag push checks out a detached HEAD; bump on top of main instead.
       - uses: actions/checkout@v4
-        with:
-          ref: main
 
-      - name: Update manifests
-        working-directory: .devops/k8s
-        # kustomize is preinstalled on ubuntu-latest runners
-        run: kustomize edit set image "${IMAGE}=${IMAGE}:${IMAGE_TAG}"
+      - uses: azure/setup-helm@v4
 
-      - name: Commit and push
+      # PRs e releases: valida o chart e confere que ele renderiza
+      - name: Lint and template
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .devops/k8s
-          git diff --cached --quiet && exit 0
-          git commit -m "chore(k8s): deploy ${IMAGE_TAG} [skip ci]"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          helm lint .devops/helm
+          helm template institutional .devops/helm --namespace institutional > /dev/null
+
+      - name: Log in to registry
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      # Chart version = tag sem o "v" (v1.2.3 -> 1.2.3); appVersion = tag, que é a tag da imagem
+      - name: Package and push chart
+        if: github.event_name == 'push'
+        run: |
+          helm package .devops/helm --version "${IMAGE_TAG#v}" --app-version "${IMAGE_TAG}"
+          helm push "institutional-${IMAGE_TAG#v}.tgz" "oci://${CHART_REPO}"
+
