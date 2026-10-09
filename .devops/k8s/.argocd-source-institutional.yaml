@@ -1,3 +1,0 @@
-kustomize:
-  images:
-  - ghcr.io/openlab-software/institutional:v0.2.0
