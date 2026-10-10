@@ -50,13 +50,13 @@ jobs:
           cache-to: type=gha,mode=max
 
   chart:
+    needs: image
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
       - uses: azure/setup-helm@v4
 
       # PRs e releases: valida o chart e confere que ele renderiza
