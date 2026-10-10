@@ -17,6 +17,7 @@ ingress:
     # Site público (Cloudflare Tunnel). O /erp do mesmo host fica no Ingress do erp:
     # o nginx escolhe o prefixo mais longo, então / aqui não conflita.
     - openlab.software
+    - www.openlab.software
     # kind local (localtest.me resolve para 127.0.0.1)
     - institutional.localtest.me
 
